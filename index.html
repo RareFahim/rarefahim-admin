@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>RareFahim Admin</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            font-family: Arial, sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    rgba(0, 255, 136, .12),
+                    transparent 35%
+                ),
+                #050505;
+
+            color: white;
+        }
+
+        /* =========================
+           LOGIN
+        ========================= */
+
+        #loginScreen {
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+
+            padding: 32px 25px;
+
+            background: rgba(255,255,255,.06);
+
+            border: 1px solid rgba(0,255,136,.22);
+
+            border-radius: 24px;
+
+            box-shadow:
+                0 0 40px rgba(0,255,136,.08);
+
+            backdrop-filter: blur(10px);
+
+            text-align: center;
+        }
+
+        .login-card h1 {
+            margin-top: 0;
+
+            color: #00ff88;
+        }
+
+        .login-card p {
+            color: #aaa;
+        }
+
+        input {
+            width: 100%;
+
+            margin-top: 12px;
+
+            padding: 14px;
+
+            border-radius: 12px;
+
+            border: 1px solid rgba(255,255,255,.12);
+
+            background: #111;
+
+            color: white;
+
+            outline: none;
+
+            font-size: 15px;
+        }
+
+        button {
+            border: none;
+
+            cursor: pointer;
+
+            font-size: 15px;
+        }
+
+        #loginBtn {
+            width: 100%;
+
+            margin-top: 18px;
+
+            padding: 14px;
+
+            border-radius: 12px;
+
+            background: #00c96b;
+
+            color: #04120b;
+
+            font-weight: bold;
+        }
+
+        #loginStatus {
+            margin-top: 15px;
+
+            color: #ff8a8a;
+
+            min-height: 20px;
+        }
+
+
+        /* =========================
+           DASHBOARD
+        ========================= */
+
+        #adminDashboard {
+            display: none;
+
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 18px 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            border-bottom:
+                1px solid rgba(255,255,255,.08);
+
+            background: rgba(0,0,0,.35);
+
+            position: sticky;
+            top: 0;
+
+            backdrop-filter: blur(12px);
+
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 20px;
+
+            font-weight: bold;
+
+            color: #00ff88;
+        }
+
+        #logoutBtn {
+            padding: 9px 14px;
+
+            border-radius: 10px;
+
+            background: rgba(255,80,80,.12);
+
+            color: #ff8a8a;
+
+            border: 1px solid rgba(255,80,80,.2);
+        }
+
+        main {
+            max-width: 1100px;
+
+            margin: auto;
+
+            padding: 25px 18px 50px;
+        }
+
+        h2 {
+            margin-top: 30px;
+        }
+
+
+        /* =========================
+           STATS
+        ========================= */
+
+        .stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(150px, 1fr));
+
+            gap: 14px;
+        }
+
+        .stat-card {
+            padding: 20px;
+
+            border-radius: 18px;
+
+            background: rgba(255,255,255,.05);
+
+            border:
+                1px solid rgba(255,255,255,.08);
+        }
+
+        .stat-number {
+            display: block;
+
+            margin-top: 8px;
+
+            font-size: 28px;
+
+            font-weight: bold;
+
+            color: #00ff88;
+        }
+
+
+        /* =========================
+           REPORTS
+        ========================= */
+
+        .report-list {
+            display: grid;
+
+            gap: 14px;
+        }
+
+        .report-card {
+            padding: 18px;
+
+            border-radius: 18px;
+
+            background: rgba(255,255,255,.05);
+
+            border:
+                1px solid rgba(255,255,255,.08);
+        }
+
+        .report-card strong {
+            color: #ff9b9b;
+        }
+
+        .report-details {
+            margin-top: 10px;
+
+            color: #bbb;
+
+            white-space: pre-wrap;
+        }
+
+        .report-meta {
+            margin-top: 12px;
+
+            font-size: 13px;
+
+            color: #888;
+        }
+
+
+        /* =========================
+           ACTIONS
+        ========================= */
+
+        .actions {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+            margin-top: 15px;
+        }
+
+        .disable-btn {
+            padding: 10px 14px;
+
+            border-radius: 10px;
+
+            background: #7a2020;
+
+            color: white;
+        }
+
+        .enable-btn {
+            padding: 10px 14px;
+
+            border-radius: 10px;
+
+            background: #126b42;
+
+            color: white;
+        }
+
+        .resolve-btn {
+            padding: 10px 14px;
+
+            border-radius: 10px;
+
+            background: #303b75;
+
+            color: white;
+        }
+
+
+        .empty {
+            color: #888;
+
+            padding: 20px 0;
+        }
+
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 15px;
+            }
+
+            main {
+                padding: 20px 14px 40px;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+
+<!-- =========================
+     LOGIN SCREEN
+========================= -->
+
+<div id="loginScreen">
+
+    <div class="login-card">
+
+        <h1>👑 RareFahim Admin</h1>
+
+        <p>
+            Secure administrator access
+        </p>
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Admin email"
+        >
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Password"
+        >
+
+        <button id="loginBtn">
+            Login
+        </button>
+
+        <p id="loginStatus"></p>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================
+     ADMIN DASHBOARD
+========================= -->
+
+<div id="adminDashboard">
+
+    <header>
+
+        <div class="logo">
+            👑 RareFahim Admin
+        </div>
+
+        <button id="logoutBtn">
+            Logout
+        </button>
+
+    </header>
+
+
+    <main>
+
+        <h2>📊 Dashboard</h2>
+
+        <div class="stats">
+
+            <div class="stat-card">
+                Total Surprises
+                <span
+                    class="stat-number"
+                    id="totalSurprises"
+                >0</span>
+            </div>
+
+
+            <div class="stat-card">
+                Active
+                <span
+                    class="stat-number"
+                    id="activeSurprises"
+                >0</span>
+            </div>
+
+
+            <div class="stat-card">
+                Disabled
+                <span
+                    class="stat-number"
+                    id="disabledSurprises"
+                >0</span>
+            </div>
+
+
+            <div class="stat-card">
+                Pending Reports
+                <span
+                    class="stat-number"
+                    id="pendingReports"
+                >0</span>
+            </div>
+
+        </div>
+
+
+
+        <h2>🚩 Recent Reports</h2>
+
+        <div
+            class="report-list"
+            id="reportList"
+        >
+
+            <p class="empty">
+                Loading reports...
+            </p>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+
+<!-- =========================
+     SUPABASE
+========================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+/* =========================
+   SUPABASE SETUP
+========================= */
+
+const SUPABASE_URL =
+    "https://ghlomcrgxkvequombpni.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_WNWXz8z0_sOyiQRvkKiQPQ_XYIMo0Mq";
+
+const supabaseClient =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+/* =========================
+   ELEMENTS
+========================= */
+
+const loginScreen =
+    document.getElementById("loginScreen");
+
+const adminDashboard =
+    document.getElementById("adminDashboard");
+
+const loginBtn =
+    document.getElementById("loginBtn");
+
+const logoutBtn =
+    document.getElementById("logoutBtn");
+
+const loginStatus =
+    document.getElementById("loginStatus");
+
+
+/* =========================
+   CHECK ADMIN
+========================= */
+
+async function checkAdmin(user) {
+
+    const { data, error } =
+        await supabaseClient
+            .from("admins")
+            .select("id")
+            .eq("id", user.id)
+            .maybeSingle();
+
+    if (error || !data) {
+
+        await supabaseClient.auth.signOut();
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+
+/* =========================
+   LOGIN
+========================= */
+
+loginBtn.addEventListener(
+    "click",
+    async () => {
+
+        const email =
+            document
+                .getElementById("email")
+                .value
+                .trim();
+
+        const password =
+            document
+                .getElementById("password")
+                .value;
+
+
+        if (!email || !password) {
+
+            loginStatus.textContent =
+                "Please enter your email and password.";
+
+            return;
+
+        }
+
+
+        loginStatus.style.color =
+            "#aaa";
+
+        loginStatus.textContent =
+            "Logging in...";
+
+
+        const { data, error } =
+            await supabaseClient.auth
+                .signInWithPassword({
+                    email,
+                    password
+                });
+
+
+        if (error) {
+
+            loginStatus.style.color =
+                "#ff8a8a";
+
+            loginStatus.textContent =
+                error.message;
+
+            return;
+
+        }
+
+
+        const isAdmin =
+            await checkAdmin(data.user);
+
+
+        if (!isAdmin) {
+
+            loginStatus.style.color =
+                "#ff8a8a";
+
+            loginStatus.textContent =
+                "This account is not an administrator.";
+
+            return;
+
+        }
+
+
+        showDashboard();
+
+    }
+);
+
+
+/* =========================
+   SHOW DASHBOARD
+========================= */
+
+function showDashboard() {
+
+    loginScreen.style.display =
+        "none";
+
+    adminDashboard.style.display =
+        "block";
+
+    loadDashboard();
+
+}
+
+
+/* =========================
+   LOAD DASHBOARD
+========================= */
+
+async function loadDashboard() {
+
+    const reportList =
+        document.getElementById("reportList");
+
+
+    const {
+        data: surprises,
+        error: surpriseError
+    } =
+        await supabaseClient
+            .from("surprises")
+            .select("*");
+
+
+    const {
+        data: reports,
+        error: reportError
+    } =
+        await supabaseClient
+            .from("reports")
+            .select("*")
+            .order(
+                "created_at",
+                { ascending: false }
+            );
+
+
+    if (surpriseError || reportError) {
+
+        reportList.innerHTML = `
+            <p class="empty">
+                Unable to load dashboard data.
+            </p>
+        `;
+
+        console.error(
+            surpriseError,
+            reportError
+        );
+
+        return;
+
+    }
+
+
+    /* STATS */
+
+    document.getElementById(
+        "totalSurprises"
+    ).textContent =
+        surprises.length;
+
+
+    document.getElementById(
+        "activeSurprises"
+    ).textContent =
+        surprises.filter(
+            item =>
+                item.status === "active"
+        ).length;
+
+
+    document.getElementById(
+        "disabledSurprises"
+    ).textContent =
+        surprises.filter(
+            item =>
+                item.status === "disabled"
+        ).length;
+
+
+    document.getElementById(
+        "pendingReports"
+    ).textContent =
+        reports.filter(
+            item =>
+                item.status === "pending"
+        ).length;
+
+
+    /* REPORTS */
+
+    if (reports.length === 0) {
+
+        reportList.innerHTML = `
+            <p class="empty">
+                🎉 No reports yet.
+            </p>
+        `;
+
+        return;
+
+    }
+
+
+    reportList.innerHTML = "";
+
+
+    reports.forEach(report => {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "report-card";
+
+
+        card.innerHTML = `
+
+            <strong>
+                🚩 ${report.reason}
+            </strong>
+
+            <div class="report-details">
+                ${report.details || "No additional details provided."}
+            </div>
+
+            <div class="report-meta">
+                Surprise: ${report.surprise_slug}
+            </div>
+
+        `;
+
+
+        reportList.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+logoutBtn.addEventListener(
+    "click",
+    async () => {
+
+        await supabaseClient.auth.signOut();
+
+        adminDashboard.style.display =
+            "none";
+
+        loginScreen.style.display =
+            "flex";
+
+    }
+);
+
+
+/* =========================
+   SESSION CHECK
+========================= */
+
+async function checkSession() {
+
+    const {
+        data: {
+            session
+        }
+    } =
+        await supabaseClient.auth
+            .getSession();
+
+
+    if (!session) {
+
+        return;
+
+    }
+
+
+    const isAdmin =
+        await checkAdmin(
+            session.user
+        );
+
+
+    if (isAdmin) {
+
+        showDashboard();
+
+    }
+
+}
+
+
+checkSession();
+
+</script>
+
+</body>
+  </html>
