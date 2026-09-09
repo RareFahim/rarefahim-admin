@@ -513,24 +513,41 @@ const loginStatus =
 
 async function checkAdmin(user) {
 
+    console.log(
+        "Checking admin:",
+        user.id
+    );
+
     const { data, error } =
         await supabaseClient
             .from("admins")
             .select("id")
             .eq("id", user.id)
-            .maybeSingle();
+            .single();
 
-    if (error || !data) {
 
-        await supabaseClient.auth.signOut();
+    console.log(
+        "Admin check result:",
+        data,
+        error
+    );
+
+
+    if (error) {
+
+        console.error(
+            "Admin check error:",
+            error
+        );
 
         return false;
 
     }
 
-    return true;
 
-}
+    return !!data;
+
+    }
 
 
 /* =========================
