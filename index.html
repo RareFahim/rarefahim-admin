@@ -512,43 +512,46 @@ const loginStatus =
 ========================= */
 
 async function checkAdmin(user) {
+async function checkAdmin(user) {
 
-    console.log(
-        "Checking admin:",
-        user.id
-    );
+    console.log("LOGGED IN USER ID:", user.id);
 
     const { data, error } =
         await supabaseClient
             .from("admins")
-            .select("id")
-            .eq("id", user.id)
-            .single();
+            .select("*")
+            .eq("id", user.id);
 
 
-    console.log(
-        "Admin check result:",
-        data,
-        error
-    );
+    console.log("ADMIN DATA:", data);
+    console.log("ADMIN ERROR:", error);
 
 
     if (error) {
 
-        console.error(
-            "Admin check error:",
-            error
-        );
+        loginStatus.textContent =
+            "Admin database error: " +
+            error.message;
 
         return false;
 
     }
 
 
-    return !!data;
+    if (!data || data.length === 0) {
+
+        loginStatus.textContent =
+            "Admin ID not found: " +
+            user.id;
+
+        return false;
 
     }
 
+
+    return true;
+
+    }
 
 /* =========================
    LOGIN
