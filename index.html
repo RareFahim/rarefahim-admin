@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>RareFahim Admin</title>
 
@@ -30,6 +32,7 @@
 
             color: white;
         }
+
 
         /* =========================
            LOGIN
@@ -67,7 +70,6 @@
 
         .login-card h1 {
             margin-top: 0;
-
             color: #00ff88;
         }
 
@@ -97,9 +99,7 @@
 
         button {
             border: none;
-
             cursor: pointer;
-
             font-size: 15px;
         }
 
@@ -119,12 +119,19 @@
             font-weight: bold;
         }
 
+        #loginBtn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
         #loginStatus {
             margin-top: 15px;
 
             color: #ff8a8a;
 
             min-height: 20px;
+
+            word-break: break-word;
         }
 
 
@@ -134,7 +141,6 @@
 
         #adminDashboard {
             display: none;
-
             min-height: 100vh;
         }
 
@@ -160,9 +166,7 @@
 
         .logo {
             font-size: 20px;
-
             font-weight: bold;
-
             color: #00ff88;
         }
 
@@ -175,7 +179,8 @@
 
             color: #ff8a8a;
 
-            border: 1px solid rgba(255,80,80,.2);
+            border:
+                1px solid rgba(255,80,80,.2);
         }
 
         main {
@@ -234,7 +239,6 @@
 
         .report-list {
             display: grid;
-
             gap: 14px;
         }
 
@@ -259,6 +263,8 @@
             color: #bbb;
 
             white-space: pre-wrap;
+
+            word-break: break-word;
         }
 
         .report-meta {
@@ -267,6 +273,8 @@
             font-size: 13px;
 
             color: #888;
+
+            word-break: break-word;
         }
 
 
@@ -276,48 +284,35 @@
 
         .actions {
             display: flex;
-
             flex-wrap: wrap;
-
             gap: 10px;
 
             margin-top: 15px;
         }
 
-        .disable-btn {
+        .disable-btn,
+        .enable-btn,
+        .resolve-btn {
             padding: 10px 14px;
-
             border-radius: 10px;
-
-            background: #7a2020;
-
             color: white;
+        }
+
+        .disable-btn {
+            background: #7a2020;
         }
 
         .enable-btn {
-            padding: 10px 14px;
-
-            border-radius: 10px;
-
             background: #126b42;
-
-            color: white;
         }
 
         .resolve-btn {
-            padding: 10px 14px;
-
-            border-radius: 10px;
-
             background: #303b75;
-
-            color: white;
         }
 
 
         .empty {
             color: #888;
-
             padding: 20px 0;
         }
 
@@ -332,10 +327,15 @@
                 padding: 20px 14px 40px;
             }
 
+            .logo {
+                font-size: 17px;
+            }
+
         }
 
     </style>
 </head>
+
 
 <body>
 
@@ -354,21 +354,27 @@
             Secure administrator access
         </p>
 
+
         <input
             type="email"
             id="email"
             placeholder="Admin email"
+            autocomplete="email"
         >
+
 
         <input
             type="password"
             id="password"
             placeholder="Password"
+            autocomplete="current-password"
         >
+
 
         <button id="loginBtn">
             Login
         </button>
+
 
         <p id="loginStatus"></p>
 
@@ -401,48 +407,74 @@
 
         <h2>📊 Dashboard</h2>
 
+
+        <!-- STATS -->
+
         <div class="stats">
 
             <div class="stat-card">
+
                 Total Surprises
+
                 <span
                     class="stat-number"
                     id="totalSurprises"
-                >0</span>
+                >
+                    0
+                </span>
+
             </div>
 
 
             <div class="stat-card">
+
                 Active
+
                 <span
                     class="stat-number"
                     id="activeSurprises"
-                >0</span>
+                >
+                    0
+                </span>
+
             </div>
 
 
             <div class="stat-card">
+
                 Disabled
+
                 <span
                     class="stat-number"
                     id="disabledSurprises"
-                >0</span>
+                >
+                    0
+                </span>
+
             </div>
 
 
             <div class="stat-card">
+
                 Pending Reports
+
                 <span
                     class="stat-number"
                     id="pendingReports"
-                >0</span>
+                >
+                    0
+                </span>
+
             </div>
 
         </div>
 
 
 
+        <!-- REPORTS -->
+
         <h2>🚩 Recent Reports</h2>
+
 
         <div
             class="report-list"
@@ -471,382 +503,3 @@
 <script>
 
 /* =========================
-   SUPABASE SETUP
-========================= */
-
-const SUPABASE_URL =
-    "https://ghlomcrgxkvequombpni.supabase.co";
-
-const SUPABASE_KEY =
-    "sb_publishable_WNWXz8z0_sOyiQRvkKiQPQ_XYIMo0Mq";
-
-const supabaseClient =
-    supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
-
-
-/* =========================
-   ELEMENTS
-========================= */
-
-const loginScreen =
-    document.getElementById("loginScreen");
-
-const adminDashboard =
-    document.getElementById("adminDashboard");
-
-const loginBtn =
-    document.getElementById("loginBtn");
-
-const logoutBtn =
-    document.getElementById("logoutBtn");
-
-const loginStatus =
-    document.getElementById("loginStatus");
-
-
-/* =========================
-   CHECK ADMIN
-========================= */
-
-async function checkAdmin(user) {
-async function checkAdmin(user) {
-
-    console.log("LOGGED IN USER ID:", user.id);
-
-    const { data, error } =
-        await supabaseClient
-            .from("admins")
-            .select("*")
-            .eq("id", user.id);
-
-
-    console.log("ADMIN DATA:", data);
-    console.log("ADMIN ERROR:", error);
-
-
-    if (error) {
-
-        loginStatus.textContent =
-            "Admin database error: " +
-            error.message;
-
-        return false;
-
-    }
-
-
-    if (!data || data.length === 0) {
-
-        loginStatus.textContent =
-            "Admin ID not found: " +
-            user.id;
-
-        return false;
-
-    }
-
-
-    return true;
-
-    }
-
-/* =========================
-   LOGIN
-========================= */
-
-loginBtn.addEventListener(
-    "click",
-    async () => {
-
-        const email =
-            document
-                .getElementById("email")
-                .value
-                .trim();
-
-        const password =
-            document
-                .getElementById("password")
-                .value;
-
-
-        if (!email || !password) {
-
-            loginStatus.textContent =
-                "Please enter your email and password.";
-
-            return;
-
-        }
-
-
-        loginStatus.style.color =
-            "#aaa";
-
-        loginStatus.textContent =
-            "Logging in...";
-
-
-        const { data, error } =
-            await supabaseClient.auth
-                .signInWithPassword({
-                    email,
-                    password
-                });
-
-
-        if (error) {
-
-            loginStatus.style.color =
-                "#ff8a8a";
-
-            loginStatus.textContent =
-                error.message;
-
-            return;
-
-        }
-
-
-        const isAdmin =
-            await checkAdmin(data.user);
-
-
-        if (!isAdmin) {
-
-            loginStatus.style.color =
-                "#ff8a8a";
-
-            loginStatus.textContent =
-                "This account is not an administrator.";
-
-            return;
-
-        }
-
-
-        showDashboard();
-
-    }
-);
-
-
-/* =========================
-   SHOW DASHBOARD
-========================= */
-
-function showDashboard() {
-
-    loginScreen.style.display =
-        "none";
-
-    adminDashboard.style.display =
-        "block";
-
-    loadDashboard();
-
-}
-
-
-/* =========================
-   LOAD DASHBOARD
-========================= */
-
-async function loadDashboard() {
-
-    const reportList =
-        document.getElementById("reportList");
-
-
-    const {
-        data: surprises,
-        error: surpriseError
-    } =
-        await supabaseClient
-            .from("surprises")
-            .select("*");
-
-
-    const {
-        data: reports,
-        error: reportError
-    } =
-        await supabaseClient
-            .from("reports")
-            .select("*")
-            .order(
-                "created_at",
-                { ascending: false }
-            );
-
-
-    if (surpriseError || reportError) {
-
-        reportList.innerHTML = `
-            <p class="empty">
-                Unable to load dashboard data.
-            </p>
-        `;
-
-        console.error(
-            surpriseError,
-            reportError
-        );
-
-        return;
-
-    }
-
-
-    /* STATS */
-
-    document.getElementById(
-        "totalSurprises"
-    ).textContent =
-        surprises.length;
-
-
-    document.getElementById(
-        "activeSurprises"
-    ).textContent =
-        surprises.filter(
-            item =>
-                item.status === "active"
-        ).length;
-
-
-    document.getElementById(
-        "disabledSurprises"
-    ).textContent =
-        surprises.filter(
-            item =>
-                item.status === "disabled"
-        ).length;
-
-
-    document.getElementById(
-        "pendingReports"
-    ).textContent =
-        reports.filter(
-            item =>
-                item.status === "pending"
-        ).length;
-
-
-    /* REPORTS */
-
-    if (reports.length === 0) {
-
-        reportList.innerHTML = `
-            <p class="empty">
-                🎉 No reports yet.
-            </p>
-        `;
-
-        return;
-
-    }
-
-
-    reportList.innerHTML = "";
-
-
-    reports.forEach(report => {
-
-        const card =
-            document.createElement("div");
-
-        card.className =
-            "report-card";
-
-
-        card.innerHTML = `
-
-            <strong>
-                🚩 ${report.reason}
-            </strong>
-
-            <div class="report-details">
-                ${report.details || "No additional details provided."}
-            </div>
-
-            <div class="report-meta">
-                Surprise: ${report.surprise_slug}
-            </div>
-
-        `;
-
-
-        reportList.appendChild(card);
-
-    });
-
-}
-
-
-/* =========================
-   LOGOUT
-========================= */
-
-logoutBtn.addEventListener(
-    "click",
-    async () => {
-
-        await supabaseClient.auth.signOut();
-
-        adminDashboard.style.display =
-            "none";
-
-        loginScreen.style.display =
-            "flex";
-
-    }
-);
-
-
-/* =========================
-   SESSION CHECK
-========================= */
-
-async function checkSession() {
-
-    const {
-        data: {
-            session
-        }
-    } =
-        await supabaseClient.auth
-            .getSession();
-
-
-    if (!session) {
-
-        return;
-
-    }
-
-
-    const isAdmin =
-        await checkAdmin(
-            session.user
-        );
-
-
-    if (isAdmin) {
-
-        showDashboard();
-
-    }
-
-}
-
-
-checkSession();
-
-</script>
-
-</body>
-  </html>
