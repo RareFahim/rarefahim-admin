@@ -503,3 +503,348 @@
 <script>
 
 /* =========================
+   SUPABASE SETUP
+========================= */
+
+const SUPABASE_URL =
+    "https://ghlomcrgxkvequombpni.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_WNWXz8z0_sOyiQRvkKiQPQ_XYIMo0Mq";
+
+const supabaseClient =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+/* =========================
+   ELEMENTS
+========================= */
+
+const loginScreen =
+    document.getElementById("loginScreen");
+
+const adminDashboard =
+    document.getElementById("adminDashboard");
+
+const loginBtn =
+    document.getElementById("loginBtn");
+
+const logoutBtn =
+    document.getElementById("logoutBtn");
+
+const loginStatus =
+    document.getElementById("loginStatus");
+
+
+/* =========================
+   LOGIN
+========================= */
+
+loginBtn.addEventListener(
+    "click",
+    async () => {
+
+        const email =
+            document
+                .getElementById("email")
+                .value
+                .trim();
+
+        const password =
+            document
+                .getElementById("password")
+                .value;
+
+
+        if (!email || !password) {
+
+            loginStatus.textContent =
+                "Please enter your email and password.";
+
+            return;
+
+        }
+
+
+        loginStatus.textContent =
+            "Logging in...";
+
+
+        const { data, error } =
+            await supabaseClient.auth
+                .signInWithPassword({
+                    email,
+                    password
+                });
+
+
+        if (error) {
+
+            loginStatus.textContent =
+                error.message;
+
+            return;
+
+        }
+
+
+        loginStatus.textContent =
+            "Checking administrator access...";
+
+
+        const { data: adminData, error: adminError } =
+            await supabaseClient
+                .from("admins")
+                .select("id")
+                .eq("id", data.user.id)
+                .maybeSingle();
+
+
+        if (adminError) {
+
+            console.error(adminError);
+
+            loginStatus.textContent =
+                "Admin check error: " +
+                adminError.message;
+
+            return;
+
+        }
+
+
+        if (!adminData) {
+
+            await supabaseClient.auth.signOut();
+
+            loginStatus.textContent =
+                "This account is not an administrator.";
+
+            return;
+
+        }
+
+
+        loginScreen.style.display =
+            "none";
+
+        adminDashboard.style.display =
+            "block";
+
+
+        loadDashboard();
+
+    }
+);
+
+
+/* =========================
+   LOAD DASHBOARD
+========================= */
+
+async function loadDashboard() {
+
+    const reportList =
+        document.getElementById("reportList");
+
+
+    const {
+        data: surprises,
+        error: surpriseError
+    } =
+        await supabaseClient
+            .from("surprises")
+            .select("*");
+
+
+    const {
+        data: reports,
+        error: reportError
+    } =
+        await supabaseClient
+            .from("reports")
+            .select("*")
+            .order(
+                "created_at",
+                { ascending: false }
+            );
+
+
+    if (surpriseError || reportError) {
+
+        console.error(
+            surpriseError,
+            reportError
+        );
+
+        reportList.innerHTML = `
+            <p class="empty">
+                Unable to load dashboard data.
+            </p>
+        `;
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "totalSurprises"
+    ).textContent =
+        surprises.length;
+
+
+    document.getElementById(
+        "activeSurprises"
+    ).textContent =
+        surprises.filter(
+            item => item.status === "active"
+        ).length;
+
+
+    document.getElementById(
+        "disabledSurprises"
+    ).textContent =
+        surprises.filter(
+            item => item.status === "disabled"
+        ).length;
+
+
+    document.getElementById(
+        "pendingReports"
+    ).textContent =
+        reports.filter(
+            item => item.status === "pending"
+        ).length;
+
+
+    if (reports.length === 0) {
+
+        reportList.innerHTML = `
+            <p class="empty">
+                🎉 No reports yet.
+            </p>
+        `;
+
+        return;
+
+    }
+
+
+    reportList.innerHTML = "";
+
+
+    reports.forEach(report => {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "report-card";
+
+
+        card.innerHTML = `
+
+            <strong>
+                🚩 ${report.reason}
+            </strong>
+
+            <div class="report-details">
+                ${report.details || "No additional details provided."}
+            </div>
+
+            <div class="report-meta">
+                Surprise: ${report.surprise_slug}
+            </div>
+
+        `;
+
+
+        reportList.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+logoutBtn.addEventListener(
+    "click",
+    async () => {
+
+        await supabaseClient.auth.signOut();
+
+        adminDashboard.style.display =
+            "none";
+
+        loginScreen.style.display =
+            "flex";
+
+        loginStatus.textContent =
+            "";
+
+    }
+);
+
+
+/* =========================
+   SESSION CHECK
+========================= */
+
+async function checkSession() {
+
+    const {
+        data: { session }
+    } =
+        await supabaseClient.auth
+            .getSession();
+
+
+    if (!session) {
+
+        return;
+
+    }
+
+
+    const {
+        data: adminData
+    } =
+        await supabaseClient
+            .from("admins")
+            .select("id")
+            .eq("id", session.user.id)
+            .maybeSingle();
+
+
+    if (adminData) {
+
+        loginScreen.style.display =
+            "none";
+
+        adminDashboard.style.display =
+            "block";
+
+        loadDashboard();
+
+    } else {
+
+        await supabaseClient.auth.signOut();
+
+    }
+
+}
+
+
+checkSession();
+
+</script>
+
+</body>
+</html>
