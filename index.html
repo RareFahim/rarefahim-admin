@@ -1068,4 +1068,269 @@ async function loadDashboard() {
 
 
                         const { error } =
-             
+    await supabaseClient
+        .from("surprises")
+        .update({
+            status: "active"
+        })
+
+
+.update({
+    status: "active"
+})
+.eq(
+    "slug",
+    slug
+);
+
+
+if (error) {
+
+    console.error(error);
+
+    alert(
+        "❌ Could not enable the surprise:\n\n" +
+        error.message
+    );
+
+    button.disabled =
+        false;
+
+    button.textContent =
+        "🟢 Enable Surprise";
+
+    return;
+
+}
+
+
+alert(
+    "✅ Surprise enabled successfully."
+);
+
+
+loadDashboard();
+
+}
+
+
+/* =========================
+   RESOLVE REPORT
+========================= */
+
+if (
+    action === "resolve"
+) {
+
+    const reportId =
+        button.dataset.reportId;
+
+
+    if (
+        button.textContent.includes(
+            "Resolved"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const confirmed =
+        confirm(
+            "Mark this report as resolved?"
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    button.disabled =
+        true;
+
+    button.textContent =
+        "Resolving...";
+
+
+    const { error } =
+        await supabaseClient
+            .from("reports")
+            .update({
+                status: "resolved"
+            })
+            .eq(
+                "id",
+                reportId
+            );
+
+
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            "❌ Could not resolve the report:\n\n" +
+            error.message
+        );
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            "✅ Resolve Report";
+
+        return;
+
+    }
+
+
+    alert(
+        "✅ Report marked as resolved."
+    );
+
+
+    loadDashboard();
+
+}
+
+}
+);
+
+}
+);
+
+}
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHTML(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return "";
+
+    }
+
+
+    const div =
+        document.createElement("div");
+
+
+    div.textContent =
+        String(value);
+
+
+    return div.innerHTML;
+
+}
+
+
+/* =========================
+   ESCAPE ATTRIBUTE
+========================= */
+
+function escapeAttribute(value) {
+
+    return escapeHTML(value)
+        .replace(
+            /"/g,
+            "&quot;"
+        );
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+logoutBtn.addEventListener(
+    "click",
+    async () => {
+
+        await supabaseClient.auth.signOut();
+
+
+        adminDashboard.style.display =
+            "none";
+
+
+        loginScreen.style.display =
+            "flex";
+
+
+        loginStatus.textContent =
+            "";
+
+
+        document
+            .getElementById("password")
+            .value =
+            "";
+
+    }
+);
+
+
+/* =========================
+   SESSION CHECK
+========================= */
+
+async function checkSession() {
+
+    const {
+        data: {
+            session
+        }
+    } =
+        await supabaseClient.auth
+            .getSession();
+
+
+    if (!session) {
+
+        return;
+
+    }
+
+
+    const isAdmin =
+        await checkAdmin(
+            session.user
+        );
+
+
+    if (isAdmin) {
+
+        showDashboard();
+
+    } else {
+
+        await supabaseClient.auth.signOut();
+
+    }
+
+}
+
+
+/* =========================
+   START APP
+========================= */
+
+checkSession();
+
+</script>
+
+</body>
+</html>
