@@ -103,6 +103,11 @@
             font-size: 15px;
         }
 
+        button:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
         #loginBtn {
             width: 100%;
 
@@ -117,11 +122,6 @@
             color: #04120b;
 
             font-weight: bold;
-        }
-
-        #loginBtn:disabled {
-            opacity: .6;
-            cursor: not-allowed;
         }
 
         #loginStatus {
@@ -294,7 +294,9 @@
         .enable-btn,
         .resolve-btn {
             padding: 10px 14px;
+
             border-radius: 10px;
+
             color: white;
         }
 
@@ -372,7 +374,7 @@
 
 
         <button id="loginBtn">
-    Login
+            Login
         </button>
 
 
@@ -407,8 +409,6 @@
 
         <h2>📊 Dashboard</h2>
 
-
-        <!-- STATS -->
 
         <div class="stats">
 
@@ -470,8 +470,6 @@
         </div>
 
 
-
-        <!-- REPORTS -->
 
         <h2>🚩 Recent Reports</h2>
 
@@ -540,6 +538,37 @@ const loginStatus =
 
 
 /* =========================
+   CHECK ADMIN
+========================= */
+
+async function checkAdmin(user) {
+
+    const { data, error } =
+        await supabaseClient
+            .from("admins")
+            .select("id")
+            .eq("id", user.id)
+            .maybeSingle();
+
+
+    if (error) {
+
+        console.error(
+            "Admin check error:",
+            error
+        );
+
+        return false;
+
+    }
+
+
+    return !!data;
+
+}
+
+
+/* =========================
    LOGIN
 ========================= */
 
@@ -561,6 +590,9 @@ loginBtn.addEventListener(
 
         if (!email || !password) {
 
+            loginStatus.style.color =
+                "#ff8a8a";
+
             loginStatus.textContent =
                 "Please enter your email and password.";
 
@@ -568,6 +600,11 @@ loginBtn.addEventListener(
 
         }
 
+
+        loginBtn.disabled = true;
+
+        loginStatus.style.color =
+            "#aaa";
 
         loginStatus.textContent =
             "Logging in...";
@@ -583,6 +620,11 @@ loginBtn.addEventListener(
 
         if (error) {
 
+            loginBtn.disabled = false;
+
+            loginStatus.style.color =
+                "#ff8a8a";
+
             loginStatus.textContent =
                 error.message;
 
@@ -595,30 +637,18 @@ loginBtn.addEventListener(
             "Checking administrator access...";
 
 
-        const { data: adminData, error: adminError } =
-            await supabaseClient
-                .from("admins")
-                .select("id")
-                .eq("id", data.user.id)
-                .maybeSingle();
+        const isAdmin =
+            await checkAdmin(data.user);
 
 
-        if (adminError) {
-
-            console.error(adminError);
-
-            loginStatus.textContent =
-                "Admin check error: " +
-                adminError.message;
-
-            return;
-
-        }
-
-
-        if (!adminData) {
+        if (!isAdmin) {
 
             await supabaseClient.auth.signOut();
+
+            loginBtn.disabled = false;
+
+            loginStatus.style.color =
+                "#ff8a8a";
 
             loginStatus.textContent =
                 "This account is not an administrator.";
@@ -628,17 +658,29 @@ loginBtn.addEventListener(
         }
 
 
-        loginScreen.style.display =
-            "none";
+        loginBtn.disabled = false;
 
-        adminDashboard.style.display =
-            "block";
-
-
-        loadDashboard();
+        showDashboard();
 
     }
 );
+
+
+/* =========================
+   SHOW DASHBOARD
+========================= */
+
+function showDashboard() {
+
+    loginScreen.style.display =
+        "none";
+
+    adminDashboard.style.display =
+        "block";
+
+    loadDashboard();
+
+}
 
 
 /* =========================
@@ -649,6 +691,13 @@ async function loadDashboard() {
 
     const reportList =
         document.getElementById("reportList");
+
+
+    reportList.innerHTML = `
+        <p class="empty">
+            Loading reports...
+        </p>
+    `;
 
 
     const {
@@ -669,7 +718,9 @@ async function loadDashboard() {
             .select("*")
             .order(
                 "created_at",
-                { ascending: false }
+                {
+                    ascending: false
+                }
             );
 
 
@@ -680,9 +731,10 @@ async function loadDashboard() {
             reportError
         );
 
+
         reportList.innerHTML = `
             <p class="empty">
-                Unable to load dashboard data.
+                ❌ Unable to load dashboard data.
             </p>
         `;
 
@@ -690,6 +742,10 @@ async function loadDashboard() {
 
     }
 
+
+    /* =========================
+       STATS
+    ========================= */
 
     document.getElementById(
         "totalSurprises"
@@ -701,7 +757,8 @@ async function loadDashboard() {
         "activeSurprises"
     ).textContent =
         surprises.filter(
-            item => item.status === "active"
+            item =>
+                item.status === "active"
         ).length;
 
 
@@ -709,7 +766,8 @@ async function loadDashboard() {
         "disabledSurprises"
     ).textContent =
         surprises.filter(
-            item => item.status === "disabled"
+            item =>
+                item.status === "disabled"
         ).length;
 
 
@@ -717,9 +775,14 @@ async function loadDashboard() {
         "pendingReports"
     ).textContent =
         reports.filter(
-            item => item.status === "pending"
+            item =>
+                item.status === "pending"
         ).length;
 
+
+    /* =========================
+       NO REPORTS
+    ========================= */
 
     if (reports.length === 0) {
 
@@ -734,6 +797,10 @@ async function loadDashboard() {
     }
 
 
+    /* =========================
+       SHOW REPORTS
+    ========================= */
+
     reportList.innerHTML = "";
 
 
@@ -742,22 +809,130 @@ async function loadDashboard() {
         const card =
             document.createElement("div");
 
+
         card.className =
             "report-card";
+
+
+        const surprise =
+            surprises.find(
+                item =>
+                    item.slug ===
+                    report.surprise_slug
+            );
+
+
+        const surpriseStatus =
+            surprise
+                ? surprise.status
+                : "not found";
+
+
+        const reportDate =
+            report.created_at
+                ? new Date(
+                    report.created_at
+                ).toLocaleString()
+                : "Unknown";
 
 
         card.innerHTML = `
 
             <strong>
-                🚩 ${report.reason}
+                🚩 ${escapeHTML(report.reason)}
             </strong>
 
+
             <div class="report-details">
-                ${report.details || "No additional details provided."}
+
+                ${
+                    report.details
+                        ? escapeHTML(
+                            report.details
+                        )
+                        : "No additional details provided."
+                }
+
             </div>
 
+
             <div class="report-meta">
-                Surprise: ${report.surprise_slug}
+
+                <strong>Surprise:</strong>
+                ${escapeHTML(report.surprise_slug)}
+
+                <br><br>
+
+                <strong>Status:</strong>
+                ${escapeHTML(surpriseStatus)}
+
+                <br><br>
+
+                <strong>Reported:</strong>
+                ${escapeHTML(reportDate)}
+
+                <br><br>
+
+                <strong>Report status:</strong>
+                ${escapeHTML(
+                    report.status || "pending"
+                )}
+
+            </div>
+
+
+            <div class="actions">
+
+                ${
+                    surprise &&
+                    surprise.status === "active"
+
+                    ? `
+
+                        <button
+                            class="disable-btn"
+                            data-action="disable"
+                            data-slug="${escapeAttribute(
+                                report.surprise_slug
+                            )}"
+                        >
+                            🔴 Disable Surprise
+                        </button>
+
+                    `
+
+                    : surprise
+
+                    ? `
+
+                        <button
+                            class="enable-btn"
+                            data-action="enable"
+                            data-slug="${escapeAttribute(
+                                report.surprise_slug
+                            )}"
+                        >
+                            🟢 Enable Surprise
+                        </button>
+
+                    `
+
+                    : ""
+                }
+
+
+                <button
+                    class="resolve-btn"
+                    data-action="resolve"
+                    data-report-id="${report.id}"
+                >
+                    ${
+                        report.status === "resolved"
+                            ? "✅ Resolved"
+                            : "✅ Resolve Report"
+                    }
+                </button>
+
             </div>
 
         `;
@@ -767,84 +942,130 @@ async function loadDashboard() {
 
     });
 
-}
+
+    /* =========================
+       ACTION BUTTONS
+    ========================= */
+
+    document
+        .querySelectorAll(
+            "[data-action]"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                async () => {
+
+                    const action =
+                        button.dataset.action;
 
 
-/* =========================
-   LOGOUT
-========================= */
+                    /* =========================
+                       DISABLE SURPRISE
+                    ========================= */
 
-logoutBtn.addEventListener(
-    "click",
-    async () => {
+                    if (
+                        action === "disable"
+                    ) {
 
-        await supabaseClient.auth.signOut();
-
-        adminDashboard.style.display =
-            "none";
-
-        loginScreen.style.display =
-            "flex";
-
-        loginStatus.textContent =
-            "";
-
-    }
-);
+                        const slug =
+                            button.dataset.slug;
 
 
-/* =========================
-   SESSION CHECK
-========================= */
-
-async function checkSession() {
-
-    const {
-        data: { session }
-    } =
-        await supabaseClient.auth
-            .getSession();
+                        const confirmed =
+                            confirm(
+                                "Disable this surprise?\n\nPeople will no longer be able to open it."
+                            );
 
 
-    if (!session) {
+                        if (!confirmed) {
 
-        return;
+                            return;
 
-    }
-
-
-    const {
-        data: adminData
-    } =
-        await supabaseClient
-            .from("admins")
-            .select("id")
-            .eq("id", session.user.id)
-            .maybeSingle();
+                        }
 
 
-    if (adminData) {
+                        button.disabled =
+                            true;
 
-        loginScreen.style.display =
-            "none";
-
-        adminDashboard.style.display =
-            "block";
-
-        loadDashboard();
-
-    } else {
-
-        await supabaseClient.auth.signOut();
-
-    }
-
-}
+                        button.textContent =
+                            "Disabling...";
 
 
-checkSession();
+                        const { error } =
+                            await supabaseClient
+                                .from("surprises")
+                                .update({
+                                    status: "disabled"
+                                })
+                                .eq(
+                                    "slug",
+                                    slug
+                                );
 
-</script>
 
-</body>
-</html>
+                        if (error) {
+
+                            console.error(error);
+
+                            alert(
+                                "❌ Could not disable the surprise:\n\n" +
+                                error.message
+                            );
+
+                            button.disabled =
+                                false;
+
+                            button.textContent =
+                                "🔴 Disable Surprise";
+
+                            return;
+
+                        }
+
+
+                        alert(
+                            "✅ Surprise disabled successfully."
+                        );
+
+
+                        loadDashboard();
+
+                    }
+
+
+                    /* =========================
+                       ENABLE SURPRISE
+                    ========================= */
+
+                    if (
+                        action === "enable"
+                    ) {
+
+                        const slug =
+                            button.dataset.slug;
+
+
+                        const confirmed =
+                            confirm(
+                                "Enable this surprise again?"
+                            );
+
+
+                        if (!confirmed) {
+
+                            return;
+
+                        }
+
+
+                        button.disabled =
+                            true;
+
+                        button.textContent =
+                            "Enabling...";
+
+
+                        const { error } =
+             
