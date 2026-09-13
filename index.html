@@ -3,10 +3,7 @@
 <head>
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>RareFahim Admin</title>
 
@@ -19,13 +16,12 @@
         body {
             margin: 0;
             min-height: 100vh;
-
             font-family: Arial, sans-serif;
 
             background:
                 radial-gradient(
                     circle at top,
-                    rgba(0, 255, 136, .12),
+                    rgba(0, 255, 136, 0.12),
                     transparent 35%
                 ),
                 #050505;
@@ -34,9 +30,7 @@
         }
 
 
-        /* =========================
-           LOGIN
-        ========================= */
+        /* LOGIN */
 
         #loginScreen {
             min-height: 100vh;
@@ -54,16 +48,14 @@
 
             padding: 32px 25px;
 
-            background: rgba(255,255,255,.06);
+            background: rgba(255,255,255,0.06);
 
-            border: 1px solid rgba(0,255,136,.22);
+            border: 1px solid rgba(0,255,136,0.22);
 
             border-radius: 24px;
 
             box-shadow:
-                0 0 40px rgba(0,255,136,.08);
-
-            backdrop-filter: blur(10px);
+                0 0 40px rgba(0,255,136,0.08);
 
             text-align: center;
         }
@@ -81,15 +73,13 @@
             width: 100%;
 
             margin-top: 12px;
-
             padding: 14px;
 
             border-radius: 12px;
 
-            border: 1px solid rgba(255,255,255,.12);
+            border: 1px solid rgba(255,255,255,0.12);
 
             background: #111;
-
             color: white;
 
             outline: none;
@@ -100,11 +90,16 @@
         button {
             border: none;
             cursor: pointer;
-            font-size: 15px;
+
+            font-size: 14px;
+
+            border-radius: 10px;
+
+            padding: 11px 14px;
         }
 
         button:disabled {
-            opacity: .6;
+            opacity: 0.6;
             cursor: not-allowed;
         }
 
@@ -115,8 +110,6 @@
 
             padding: 14px;
 
-            border-radius: 12px;
-
             background: #00c96b;
 
             color: #04120b;
@@ -125,19 +118,17 @@
         }
 
         #loginStatus {
+            min-height: 20px;
+
             margin-top: 15px;
 
             color: #ff8a8a;
-
-            min-height: 20px;
 
             word-break: break-word;
         }
 
 
-        /* =========================
-           DASHBOARD
-        ========================= */
+        /* DASHBOARD */
 
         #adminDashboard {
             display: none;
@@ -145,42 +136,37 @@
         }
 
         header {
+            position: sticky;
+            top: 0;
+
+            z-index: 10;
+
             padding: 18px 20px;
 
             display: flex;
             align-items: center;
             justify-content: space-between;
 
+            background: rgba(0,0,0,0.9);
+
             border-bottom:
-                1px solid rgba(255,255,255,.08);
-
-            background: rgba(0,0,0,.35);
-
-            position: sticky;
-            top: 0;
-
-            backdrop-filter: blur(12px);
-
-            z-index: 10;
+                1px solid rgba(255,255,255,0.08);
         }
 
         .logo {
             font-size: 20px;
             font-weight: bold;
+
             color: #00ff88;
         }
 
         #logoutBtn {
-            padding: 9px 14px;
+            background: rgba(255,80,80,0.15);
 
-            border-radius: 10px;
-
-            background: rgba(255,80,80,.12);
-
-            color: #ff8a8a;
+            color: #ff9b9b;
 
             border:
-                1px solid rgba(255,80,80,.2);
+                1px solid rgba(255,80,80,0.25);
         }
 
         main {
@@ -196,9 +182,7 @@
         }
 
 
-        /* =========================
-           STATS
-        ========================= */
+        /* STATS */
 
         .stats {
             display: grid;
@@ -214,10 +198,10 @@
 
             border-radius: 18px;
 
-            background: rgba(255,255,255,.05);
+            background: rgba(255,255,255,0.05);
 
             border:
-                1px solid rgba(255,255,255,.08);
+                1px solid rgba(255,255,255,0.08);
         }
 
         .stat-number {
@@ -226,16 +210,13 @@
             margin-top: 8px;
 
             font-size: 28px;
-
             font-weight: bold;
 
             color: #00ff88;
         }
 
 
-        /* =========================
-           REPORTS
-        ========================= */
+        /* REPORTS */
 
         .report-list {
             display: grid;
@@ -247,75 +228,77 @@
 
             border-radius: 18px;
 
-            background: rgba(255,255,255,.05);
+            background: rgba(255,255,255,0.05);
 
             border:
-                1px solid rgba(255,255,255,.08);
+                1px solid rgba(255,255,255,0.08);
         }
 
-        .report-card strong {
+        .report-title {
             color: #ff9b9b;
+
+            font-size: 17px;
+            font-weight: bold;
         }
 
         .report-details {
-            margin-top: 10px;
+            margin-top: 12px;
 
-            color: #bbb;
+            color: #ccc;
 
             white-space: pre-wrap;
-
             word-break: break-word;
         }
 
         .report-meta {
-            margin-top: 12px;
+            margin-top: 15px;
 
             font-size: 13px;
 
-            color: #888;
+            color: #999;
+
+            line-height: 1.6;
 
             word-break: break-word;
         }
 
 
-        /* =========================
-           ACTIONS
-        ========================= */
+        /* BUTTONS */
 
         .actions {
             display: flex;
+
             flex-wrap: wrap;
+
             gap: 10px;
 
-            margin-top: 15px;
+            margin-top: 18px;
         }
 
-        .disable-btn,
-        .enable-btn,
-        .resolve-btn {
-            padding: 10px 14px;
-
-            border-radius: 10px;
-
+        .view-btn {
+            background: #0066cc;
             color: white;
         }
 
         .disable-btn {
             background: #7a2020;
+            color: white;
         }
 
         .enable-btn {
             background: #126b42;
+            color: white;
         }
 
         .resolve-btn {
             background: #303b75;
+            color: white;
         }
 
-
         .empty {
-            color: #888;
             padding: 20px 0;
+
+            color: #888;
         }
 
 
@@ -325,12 +308,16 @@
                 padding: 15px;
             }
 
+            .logo {
+                font-size: 17px;
+            }
+
             main {
                 padding: 20px 14px 40px;
             }
 
-            .logo {
-                font-size: 17px;
+            button {
+                width: 100%;
             }
 
         }
@@ -342,9 +329,7 @@
 <body>
 
 
-<!-- =========================
-     LOGIN SCREEN
-========================= -->
+<!-- LOGIN -->
 
 <div id="loginScreen">
 
@@ -352,9 +337,7 @@
 
         <h1>👑 RareFahim Admin</h1>
 
-        <p>
-            Secure administrator access
-        </p>
+        <p>Secure administrator access</p>
 
 
         <input
@@ -386,9 +369,7 @@
 
 
 
-<!-- =========================
-     ADMIN DASHBOARD
-========================= -->
+<!-- DASHBOARD -->
 
 <div id="adminDashboard">
 
@@ -470,8 +451,7 @@
         </div>
 
 
-
-        <h2>🚩 Recent Reports</h2>
+        <h2>🚩 Reports</h2>
 
 
         <div
@@ -491,18 +471,11 @@
 
 
 
-<!-- =========================
-     SUPABASE
-========================= -->
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
 <script>
 
-/* =========================
-   SUPABASE SETUP
-========================= */
 
 const SUPABASE_URL =
     "https://ghlomcrgxkvequombpni.supabase.co";
@@ -510,16 +483,13 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
     "sb_publishable_WNWXz8z0_sOyiQRvkKiQPQ_XYIMo0Mq";
 
+
 const supabaseClient =
     supabase.createClient(
         SUPABASE_URL,
         SUPABASE_KEY
     );
 
-
-/* =========================
-   ELEMENTS
-========================= */
 
 const loginScreen =
     document.getElementById("loginScreen");
@@ -536,10 +506,9 @@ const logoutBtn =
 const loginStatus =
     document.getElementById("loginStatus");
 
+const reportList =
+    document.getElementById("reportList");
 
-/* =========================
-   CHECK ADMIN
-========================= */
 
 async function checkAdmin(user) {
 
@@ -553,10 +522,7 @@ async function checkAdmin(user) {
 
     if (error) {
 
-        console.error(
-            "Admin check error:",
-            error
-        );
+        console.error(error);
 
         return false;
 
@@ -568,9 +534,16 @@ async function checkAdmin(user) {
 }
 
 
-/* =========================
-   LOGIN
-========================= */
+function showDashboard() {
+
+    loginScreen.style.display = "none";
+
+    adminDashboard.style.display = "block";
+
+    loadDashboard();
+
+}
+
 
 loginBtn.addEventListener(
     "click",
@@ -590,9 +563,6 @@ loginBtn.addEventListener(
 
         if (!email || !password) {
 
-            loginStatus.style.color =
-                "#ff8a8a";
-
             loginStatus.textContent =
                 "Please enter your email and password.";
 
@@ -603,8 +573,7 @@ loginBtn.addEventListener(
 
         loginBtn.disabled = true;
 
-        loginStatus.style.color =
-            "#aaa";
+        loginStatus.style.color = "#aaa";
 
         loginStatus.textContent =
             "Logging in...";
@@ -666,38 +635,10 @@ loginBtn.addEventListener(
 );
 
 
-/* =========================
-   SHOW DASHBOARD
-========================= */
-
-function showDashboard() {
-
-    loginScreen.style.display =
-        "none";
-
-    adminDashboard.style.display =
-        "block";
-
-    loadDashboard();
-
-}
-
-
-/* =========================
-   LOAD DASHBOARD
-========================= */
-
 async function loadDashboard() {
 
-    const reportList =
-        document.getElementById("reportList");
-
-
-    reportList.innerHTML = `
-        <p class="empty">
-            Loading reports...
-        </p>
-    `;
+    reportList.innerHTML =
+        `<p class="empty">Loading reports...</p>`;
 
 
     const {
@@ -718,9 +659,7 @@ async function loadDashboard() {
             .select("*")
             .order(
                 "created_at",
-                {
-                    ascending: false
-                }
+                { ascending: false }
             );
 
 
@@ -731,21 +670,15 @@ async function loadDashboard() {
             reportError
         );
 
-
-        reportList.innerHTML = `
-            <p class="empty">
+        reportList.innerHTML =
+            `<p class="empty">
                 ❌ Unable to load dashboard data.
-            </p>
-        `;
+            </p>`;
 
         return;
 
     }
 
-
-    /* =========================
-       STATS
-    ========================= */
 
     document.getElementById(
         "totalSurprises"
@@ -757,8 +690,8 @@ async function loadDashboard() {
         "activeSurprises"
     ).textContent =
         surprises.filter(
-            item =>
-                item.status === "active"
+            surprise =>
+                surprise.status === "active"
         ).length;
 
 
@@ -766,8 +699,8 @@ async function loadDashboard() {
         "disabledSurprises"
     ).textContent =
         surprises.filter(
-            item =>
-                item.status === "disabled"
+            surprise =>
+                surprise.status === "disabled"
         ).length;
 
 
@@ -775,44 +708,27 @@ async function loadDashboard() {
         "pendingReports"
     ).textContent =
         reports.filter(
-            item =>
-                item.status === "pending"
+            report =>
+                report.status !== "resolved"
         ).length;
 
 
-    /* =========================
-       NO REPORTS
-    ========================= */
-
     if (reports.length === 0) {
 
-        reportList.innerHTML = `
-            <p class="empty">
+        reportList.innerHTML =
+            `<p class="empty">
                 🎉 No reports yet.
-            </p>
-        `;
+            </p>`;
 
         return;
 
     }
 
 
-    /* =========================
-       SHOW REPORTS
-    ========================= */
-
     reportList.innerHTML = "";
 
 
     reports.forEach(report => {
-
-        const card =
-            document.createElement("div");
-
-
-        card.className =
-            "report-card";
-
 
         const surprise =
             surprises.find(
@@ -822,13 +738,13 @@ async function loadDashboard() {
             );
 
 
-        const surpriseStatus =
+        const status =
             surprise
-                ? surprise.status
-                : "not found";
+                ? surprise.status || "active"
+                : "Not found";
 
 
-        const reportDate =
+        const date =
             report.created_at
                 ? new Date(
                     report.created_at
@@ -836,44 +752,51 @@ async function loadDashboard() {
                 : "Unknown";
 
 
+        const card =
+            document.createElement("div");
+
+
+        card.className =
+            "report-card";
+
+
         card.innerHTML = `
 
-            <strong>
-                🚩 ${escapeHTML(report.reason)}
-            </strong>
+            <div class="report-title">
+                🚩 ${escapeHTML(
+                    report.reason || "Report"
+                )}
+            </div>
 
 
             <div class="report-details">
-
                 ${
-                    report.details
-                        ? escapeHTML(
-                            report.details
-                        )
-                        : "No additional details provided."
+                    escapeHTML(
+                        report.details ||
+                        "No additional details provided."
+                    )
                 }
-
             </div>
 
 
             <div class="report-meta">
 
-                <strong>Surprise:</strong>
+                <b>Surprise slug:</b>
                 ${escapeHTML(report.surprise_slug)}
 
-                <br><br>
+                <br>
 
-                <strong>Status:</strong>
-                ${escapeHTML(surpriseStatus)}
+                <b>Surprise status:</b>
+                ${escapeHTML(status)}
 
-                <br><br>
+                <br>
 
-                <strong>Reported:</strong>
-                ${escapeHTML(reportDate)}
+                <b>Reported:</b>
+                ${escapeHTML(date)}
 
-                <br><br>
+                <br>
 
-                <strong>Report status:</strong>
+                <b>Report status:</b>
                 ${escapeHTML(
                     report.status || "pending"
                 )}
@@ -883,9 +806,20 @@ async function loadDashboard() {
 
             <div class="actions">
 
+                <button
+                    class="view-btn"
+                    data-action="view"
+                    data-slug="${escapeAttribute(
+                        report.surprise_slug
+                    )}"
+                >
+                    👁️ View Surprise
+                </button>
+
+
                 ${
                     surprise &&
-                    surprise.status === "active"
+                    status === "active"
 
                     ? `
 
@@ -921,17 +855,34 @@ async function loadDashboard() {
                 }
 
 
-                <button
-                    class="resolve-btn"
-                    data-action="resolve"
-                    data-report-id="${report.id}"
-                >
-                    ${
-                        report.status === "resolved"
-                            ? "✅ Resolved"
-                            : "✅ Resolve Report"
-                    }
-                </button>
+                ${
+                    report.status !== "resolved"
+
+                    ? `
+
+                        <button
+                            class="resolve-btn"
+                            data-action="resolve"
+                            data-report-id="${escapeAttribute(
+                                report.id
+                            )}"
+                        >
+                            ✅ Resolve Report
+                        </button>
+
+                    `
+
+                    : `
+
+                        <button
+                            class="resolve-btn"
+                            disabled
+                        >
+                            ✅ Resolved
+                        </button>
+
+                    `
+                }
 
             </div>
 
@@ -943,14 +894,14 @@ async function loadDashboard() {
     });
 
 
-    /* =========================
-       ACTION BUTTONS
-    ========================= */
+    addActionListeners();
+
+}
+
+    function addActionListeners() {
 
     document
-        .querySelectorAll(
-            "[data-action]"
-        )
+        .querySelectorAll("[data-action]")
         .forEach(button => {
 
             button.addEventListener(
@@ -961,33 +912,45 @@ async function loadDashboard() {
                         button.dataset.action;
 
 
-                    /* =========================
-                       DISABLE SURPRISE
-                    ========================= */
+                    /* VIEW SURPRISE */
 
-                    if (
-                        action === "disable"
-                    ) {
+                    if (action === "view") {
 
                         const slug =
                             button.dataset.slug;
 
 
-                        const confirmed =
-                            confirm(
+                        window.open(
+                            "https://rarefahim.github.io/surprise-website-maker/?surprise=" +
+                            encodeURIComponent(slug),
+                            "_blank"
+                        );
+
+                        return;
+
+                    }
+
+
+                    /* DISABLE */
+
+                    if (action === "disable") {
+
+                        const slug =
+                            button.dataset.slug;
+
+
+                        if (
+                            !confirm(
                                 "Disable this surprise?\n\nPeople will no longer be able to open it."
-                            );
-
-
-                        if (!confirmed) {
+                            )
+                        ) {
 
                             return;
 
                         }
 
 
-                        button.disabled =
-                            true;
+                        button.disabled = true;
 
                         button.textContent =
                             "Disabling...";
@@ -1010,12 +973,11 @@ async function loadDashboard() {
                             console.error(error);
 
                             alert(
-                                "❌ Could not disable the surprise:\n\n" +
+                                "❌ Could not disable surprise:\n\n" +
                                 error.message
                             );
 
-                            button.disabled =
-                                false;
+                            button.disabled = false;
 
                             button.textContent =
                                 "🔴 Disable Surprise";
@@ -1026,219 +988,174 @@ async function loadDashboard() {
 
 
                         alert(
-                            "✅ Surprise disabled successfully."
+                            "✅ Surprise disabled."
                         );
 
-
                         loadDashboard();
+
+                        return;
 
                     }
 
 
-                    /* =========================
-                       ENABLE SURPRISE
-                    ========================= */
+                    /* ENABLE */
 
-                    if (
-                        action === "enable"
-                    ) {
+                    if (action === "enable") {
 
                         const slug =
                             button.dataset.slug;
 
 
-                        const confirmed =
-                            confirm(
+                        if (
+                            !confirm(
                                 "Enable this surprise again?"
-                            );
-
-
-                        if (!confirmed) {
+                            )
+                        ) {
 
                             return;
 
                         }
 
 
-                        button.disabled =
-                            true;
+                        button.disabled = true;
 
                         button.textContent =
                             "Enabling...";
 
 
                         const { error } =
-    await supabaseClient
-        .from("surprises")
-        .update({
-            status: "active"
-        })
+                            await supabaseClient
+                                .from("surprises")
+                                .update({
+                                    status: "active"
+                                })
+                                .eq(
+                                    "slug",
+                                    slug
+                                );
 
 
-.update({
-    status: "active"
-})
-.eq(
-    "slug",
-    slug
-);
+                        if (error) {
+
+                            console.error(error);
+
+                            alert(
+                                "❌ Could not enable surprise:\n\n" +
+                                error.message
+                            );
+
+                            button.disabled = false;
+
+                            button.textContent =
+                                "🟢 Enable Surprise";
+
+                            return;
+
+                        }
 
 
-if (error) {
+                        alert(
+                            "✅ Surprise enabled."
+                        );
 
-    console.error(error);
+                        loadDashboard();
 
-    alert(
-        "❌ Could not enable the surprise:\n\n" +
-        error.message
-    );
+                        return;
 
-    button.disabled =
-        false;
-
-    button.textContent =
-        "🟢 Enable Surprise";
-
-    return;
-
-}
+                    }
 
 
-alert(
-    "✅ Surprise enabled successfully."
-);
+                    /* RESOLVE REPORT */
+
+                    if (action === "resolve") {
+
+                        const reportId =
+                            button.dataset.reportId;
 
 
-loadDashboard();
+                        if (
+                            !confirm(
+                                "Mark this report as resolved?"
+                            )
+                        ) {
 
-}
+                            return;
 
-
-/* =========================
-   RESOLVE REPORT
-========================= */
-
-if (
-    action === "resolve"
-) {
-
-    const reportId =
-        button.dataset.reportId;
+                        }
 
 
-    if (
-        button.textContent.includes(
-            "Resolved"
-        )
-    ) {
+                        button.disabled = true;
 
-        return;
-
-    }
+                        button.textContent =
+                            "Resolving...";
 
 
-    const confirmed =
-        confirm(
-            "Mark this report as resolved?"
-        );
+                        const { error } =
+                            await supabaseClient
+                                .from("reports")
+                                .update({
+                                    status: "resolved"
+                                })
+                                .eq(
+                                    "id",
+                                    reportId
+                                );
 
 
-    if (!confirmed) {
+                        if (error) {
 
-        return;
+                            console.error(error);
 
-    }
+                            alert(
+                                "❌ Could not resolve report:\n\n" +
+                                error.message
+                            );
+
+                            button.disabled = false;
+
+                            button.textContent =
+                                "✅ Resolve Report";
+
+                            return;
+
+                        }
 
 
-    button.disabled =
-        true;
+                        alert(
+                            "✅ Report resolved."
+                        );
 
-    button.textContent =
-        "Resolving...";
+                        loadDashboard();
 
+                    }
 
-    const { error } =
-        await supabaseClient
-            .from("reports")
-            .update({
-                status: "resolved"
-            })
-            .eq(
-                "id",
-                reportId
+                }
             );
 
-
-    if (error) {
-
-        console.error(error);
-
-        alert(
-            "❌ Could not resolve the report:\n\n" +
-            error.message
-        );
-
-        button.disabled =
-            false;
-
-        button.textContent =
-            "✅ Resolve Report";
-
-        return;
-
-    }
-
-
-    alert(
-        "✅ Report marked as resolved."
-    );
-
-
-    loadDashboard();
-
-}
-
-}
-);
-
-}
-);
+        });
 
 }
 
 
-/* =========================
-   ESCAPE HTML
-========================= */
+/* SAFE TEXT */
 
 function escapeHTML(value) {
-
-    if (
-        value === null ||
-        value === undefined
-    ) {
-
-        return "";
-
-    }
-
 
     const div =
         document.createElement("div");
 
 
     div.textContent =
-        String(value);
+        value === null ||
+        value === undefined
+            ? ""
+            : String(value);
 
 
     return div.innerHTML;
 
 }
 
-
-/* =========================
-   ESCAPE ATTRIBUTE
-========================= */
 
 function escapeAttribute(value) {
 
@@ -1251,9 +1168,7 @@ function escapeAttribute(value) {
 }
 
 
-/* =========================
-   LOGOUT
-========================= */
+/* LOGOUT */
 
 logoutBtn.addEventListener(
     "click",
@@ -1283,9 +1198,7 @@ logoutBtn.addEventListener(
 );
 
 
-/* =========================
-   SESSION CHECK
-========================= */
+/* SESSION CHECK */
 
 async function checkSession() {
 
@@ -1324,9 +1237,7 @@ async function checkSession() {
 }
 
 
-/* =========================
-   START APP
-========================= */
+/* START */
 
 checkSession();
 
